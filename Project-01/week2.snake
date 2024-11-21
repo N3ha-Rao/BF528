@@ -1,0 +1,68 @@
+NAMES = ['P0rep1', 'P0rep2', 'P4rep1', 'P4rep2', 'P7rep1', 'P7rep1', 'ADrep1', 'ADrep2']
+
+rule all:
+    input:
+        '/projectnb/bf528/students/neharao/project-1-template-NB-Rao/ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M33/GRCm39.primary_assembly.genome.fa.gz',
+        'results/gencode.vM33.primary_assembly.annotation.gtf',
+        expand('results/{names}_flagstats.txt', names=NAMES)
+
+rule wget_m39:
+    output:
+        'results/GRCm39.primary_assembly.genome.fa.gz'
+    params:
+        ftp_path = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M33/GRCm39.primary_assembly.genome.fa.gz'
+    shell:
+        '''
+        wget -p results/ {params.ftp_path}
+        '''
+
+rule wget_m39_gtf:
+    output:
+        'results/gencode.vM33.primary_assembly.annotation.gtf.gz'
+    params:
+        ftp_path = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M33/gencode.vM33.primary_assembly.annotation.gtf.gz'
+    shell:
+        '''
+        wget -p results/ {params.ftp_path}
+        '''
+
+rule unzip:
+    input:
+        gz = '/projectnb/bf528/students/neharao/project-1-template-NB-Rao/ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M33/gencode.vM33.primary_assembly.annotation.gtf.gz'
+    output:
+        gtf = 'results/gencode.vM33.primary_assembly.annotation.gtf'
+    shell:
+        '''
+        gunzip -c {input.gz} > {output.gtf}
+        '''
+
+rule star:
+    input:
+        r1 = 'samples/full_files/{name}_R1.fastq.gz',
+        r2 = 'samples/full_files/{name}_R2.fastq.gz',
+        star_dir = 'results/m39_star/'
+    output:    
+        bam = 'results/{name}.Aligned.out.bam'
+    params:
+        prefix = 'results/{name}.',
+        threads = 8
+    shell:
+        '''
+        STAR --runThreadN {threads} \
+             --genomeDir {input.star_dir}/ \
+             --readFilesCommand zcat \
+             --readFilesIn {input.r1} {input.r2} \
+             --outSAMtype BAM Unsorted \
+             --outFileNamePrefix {params.prefix}
+        '''
+
+rule samtools_flagstat:
+    input:
+        bam = "results/{name}.Aligned.out.bam"
+    output:
+        flagstats = "results/{name}_flagstats.txt"
+    shell:
+        '''
+        samtools flagstats {input.bam} > {output.flagstats}
+        wait  # Wait until the output file is fully written
+        '''
