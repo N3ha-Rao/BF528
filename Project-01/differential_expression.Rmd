@@ -1,0 +1,47 @@
+---
+#title: "Differential Expression"
+#output: html_document
+---
+
+#Use this notebook to perform differential expression and all other post-DE
+#analyses. 
+
+# Load necessary libraries
+library(DESeq2)
+library(tidyverse)
+
+# Read in the counts matrix
+counts_matrix <- read.csv("/projectnb/bf528/students/neharao/project-1-template-NB-Rao/results/full_filtered_counts_matrix.csv")
+
+# Recreate the coldata data frame
+coldata <- read.csv("/projectnb/bf528/students/neharao/project-1-template-NB-Rao/results/full_filtered_counts_matrix.csv")
+
+# Extracting timepoint from sample names
+coldata$timepoint <- substr(coldata$sample, 1, 2)
+
+# Print the first few rows of coldata to verify
+print(head(coldata))
+
+# Create DESeqDataSet
+dds <- DESeqDataSetFromMatrix(countData = counts_matrix, colData = coldata, design = ~ timepoint)
+
+# Perform differential expression analysis
+dds <- DESeq(dds)
+
+# Contrast for differential expression analysis (AD vs p0)
+contrast <- c("timepoint", "AD", "P0")
+
+# DE Results for the specified contrast
+results_AD_P0 <- results(dds, contrast = contrast)
+
+# DE Results in a tibble
+results <- as_tibble(results_AD_P0)
+results$gene_id <- rownames(results_AD_P0)
+results <- results %>% select(gene_id, everything())
+
+# Reading gene map data
+gene_map <- read.csv("/projectnb/bf528/students/neharao/project-1-template-NB-Rao/results/full_genemap.csv", header = TRUE)
+
+#Joining gene names to results tibble
+results <- left_join(results, gene_map, by = "gene_id")
+results <- results %>% select(gene_id, gene_name, everything())
