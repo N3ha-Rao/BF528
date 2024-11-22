@@ -40,15 +40,6 @@ This course introduces students to modern bioinformatics studies with a specific
 ### **Instructor**  
 **Joey Orofino & Adam Labadorf**  
 
----
-
-### **Projects Overview**  
-
-#### **Project Topics**  
-1. **Project 0**: Genome Analytics (Introduction)  
-2. **Project 1**: RNAseq  
-3. **Project 2**: ChIPseq  
-4. **Project 3**: scRNAseq  
 
 ---
 
