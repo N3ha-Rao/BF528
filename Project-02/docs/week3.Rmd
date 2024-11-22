@@ -1,0 +1,43 @@
+---
+title: "Week3.Rmd"
+output: html_document
+date: '2024-03-01'
+---
+
+Use this notebook to quickly write the methods for the week:
+
+Here's what each rule does:
+`rule all`: Specifies the final output files for the entire workflow, including tag directories, peak files in TXT and BED formats, reproducible peaks, filtered peaks, annotated peaks, and motif analysis results.
+`rule make_tag_dir`: Runs the makeTagDirectory command from HOMER to generate tag directories for each sample.
+`rule findPeaks`: Runs the findPeaks command from HOMER to identify peaks for each sample, using the corresponding input sample as a control.
+`rule convertPeakFiles`: Converts the peak files from HOMER's format to BED format using the pos2bed.pl utility.
+`rule intersect_peaks`: Uses bedtools intersect to find the intersection of peaks between replicates, creating a set of reproducible peaks.
+`rule filter_blacklist`: Filters out the reproducible peaks that overlap with blacklisted regions.
+`rule unzip_gtf`: Decompresses the GTF annotation file for use in peak annotation.
+`rule annotate_peaks`: Annotates the filtered peaks to their nearest genomic features using the annotatePeaks.pl utility from HOMER.
+`rule unzip_genome`: Decompresses the reference genome FASTA file for use in motif finding.
+`rule motifs`: Runs the findMotifsGenome.pl utility from HOMER to perform motif enrichment analysis on the filtered peaks.
+
+
+`Peak Calling`
+To identify regions of enrichment representing putative binding sites of the transcription factors, 
+peak calling was performed using HOMER v4.11 (Heinz et al., 2010). First, the sorted BAM files were converted 
+into tag directories using the makeTagDirectory command. Then, the findPeaks command was run for each ChIP sample, 
+using the corresponding input sample as a control, with the -style factor option to indicate a transcription factor 
+experiment. The resulting peak files were converted from HOMER's native format to BED format using the pos2bed.pl utility.
+
+`Reproducible Peak Identification`
+To identify a set of reproducible peaks, the intersection of peaks between replicates was computed using bedtools 
+intersect (Quinlan and Hall, 2010). The resulting set of reproducible peaks was further filtered to remove peaks 
+overlapping with blacklisted regions known to exhibit high signal artifacts, using bedtools intersect 
+with the -v option.
+
+`Peak Annotation and Motif Analysis`
+The filtered set of reproducible peaks was annotated to their nearest genomic features using the annotatePeaks.pl 
+utility from HOMER, with the GRCh38 (hg39) GENCODE annotation file as a reference. Finally, motif enrichment analysis 
+was performed on the annotated peaks using the findMotifsGenome.pl command from HOMER, with the GRCh38 reference genome 
+and default parameters for motif lengths (8, 10, and 12 bp) and maximum mismatches (8).
+
+If asked, you may also include any plots or figures in this notebook as well:
+
+

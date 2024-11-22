@@ -1,0 +1,30 @@
+---
+title: "Week4.Rmd"
+output: html_document
+date: '2024-03-01'
+---
+
+Use this notebook to quickly write the methods for the week:
+
+`Signal Coverage Across Gene Bodies`
+To visualize the genome-wide binding pattern of the transcription factor RUNX1, signal coverage across gene bodies 
+was computed using the deepTools v3.5.1 (Ramírez et al., 2016) suite. First, the computeMatrix utility was employed 
+to generate matrices containing the read counts from the bigWig files, considering a 2000 bp window upstream and 
+downstream of the transcription start site (TSS) and transcription termination site (TTS), respectively. These matrices 
+were generated for each ChIP sample, using the RefSeq gene annotations for the GRCh38 human reference genome as a reference.
+The resulting matrices were then used as input for the plotProfile utility to generate visualizations of the average 
+signal across gene bodies. These plots provide insights into the binding patterns of RUNX1, with enrichment in the 
+promoter-TSS region suggesting a potential role in transcriptional regulation.
+
+`Integration with RNAseq Results`
+To investigate the relationship between RUNX1 binding and gene expression, the ChIP-seq results were integrated with 
+previously published RNA-seq data (Barutcu et al., 2016; GEO accession GSE75070). The processed differential expression results 
+(GSE75070_MCF7_shRUNX1_shNS_RNAseq_log2_foldchange.txt.gz) were downloaded, and the same filters and cutoffs as described in 
+the original study were applied to identify significantly differentially expressed (DE) genes upon RUNX1 knockdown.
+Using the annotated peak file and the list of DE genes, the proportion of DE genes with a RUNX1 peak within various distances 
+from the TSS (±5 kb, ±20 kb, and ±100 kb) was calculated and visualized as stacked bar charts, replicating Figure 2f and 
+Supplementary Figure S2D from the original publication.
+
+
+If asked, you may also include any plots or figures in this notebook as well:
+

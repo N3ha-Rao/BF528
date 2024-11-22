@@ -1,0 +1,29 @@
+---
+title: "Week2.Rmd"
+output: html_document
+date: '2024-03-01'
+---
+
+Use this notebook to quickly write the methods for the week:
+
+Alignment and Sorting
+
+Reads from the trimmed FASTQ files were aligned to the GRCh38 human reference genome using Bowtie2 v2.4.2 (Langmead and Salzberg, 2012) with default parameters. The resulting SAM files were converted to compressed BAM format and sorted by genomic coordinates using SAMtools v1.16.1 (Li et al., 2009) with the samtools view and samtools sort commands, respectively.
+
+
+Quality Assessment
+
+The quality of the alignments was assessed using SAMtools v1.16.1 (Li et al., 2009) with the samtools flagstat command, which provides summary statistics such as the number of mapped and unmapped reads. MultiQC v1.14 (Ewels et al., 2016) was used to aggregate the quality control reports from FastQC (Andrews, 2010) and SAMtools, generating a comprehensive HTML report (results/multiqc_report.html).
+
+
+Bigwig Generation and Correlation Analysis
+
+To facilitate downstream analysis and visualization, the sorted BAM files were converted to bigWig format using the bamCoverage utility from deepTools v3.5.1 (Ramírez et al., 2016) with default parameters. The resulting bigWig files (results/bigwigs/{condition}_{rep}.bw) represent the genome-wide coverage of aligned reads in a compressed binary format.
+
+The multiBigwigSummary utility from deepTools was used to generate a summary file (results/multibw_summary.npz) containing the read counts for each sample across binned genomic regions. This summary file was then used by the plotCorrelation utility to generate a heatmap (results/correlation_plot.pdf) displaying the Pearson correlation coefficients between all samples, providing an overview of the similarity between replicates and conditions.
+
+
+
+
+If asked, you may also include any plots or figures in this notebook as well:
+

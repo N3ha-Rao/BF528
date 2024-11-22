@@ -1,1 +1,33 @@
+---
+title: "Week1.Rmd"
+output: html_document
+date: '2024-03-01'
+---
+
+Use this notebook to quickly write the methods for the week:
+
+Here's what each rule does:
+- rule all: Specifies the final output files for the entire workflow, including the trimmed FASTQ files, FastQC reports, and the Bowtie2 index files.
+- rule wget_files: Downloads the FASTQ files from the provided FTP links and renames them to a consistent format ({condition}_{rep}.fastq.gz).
+- rule bowtie2_build_gencode: Builds the Bowtie2 index for the provided reference genome (results/GRCh38.primary_assembly.genome.fa.gz).
+- rule fastqc: Runs FastQC on the downloaded FASTQ files to generate quality control reports.
+- rule trimmomatic: Performs adapter and quality trimming on the FASTQ files using Trimmomatic with the specified parameters.
+
+Methods:
+
+Quality control
+
+The FASTQ files were renamed to a consistent format ({condition}_{replicate}.fastq.gz) using a custom snakemake rule (rule wget_files). The quality of the downloaded FASTQ files was assessed using FastQC v0.11.9 with the rule fastqc. This rule generated compressed reports (results/fastqc/{condition}_{rep}_fastqc.zip) containing quality metrics such as per-base sequence quality, adapter content, and overrepresented sequences.
+
+Adapter and quality trimming
+
+Adapter sequences and low-quality bases were trimmed from the raw FASTQ files using Trimmomatic v0.39 with the following parameters: ILLUMINACLIP:{adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15. This step was implemented in the rule trimmomatic, which produced trimmed FASTQ files (results/trimmed/{condition}_{rep}_trimmed.fastq.gz). The adapter sequences were obtained from the provided file (materials/project_2_chipseq/adapters.fa).
+
+Reference genome indexing
+
+To facilitate efficient read alignment, a Bowtie2 index was built for the GRCh38 human reference genome (results/GRCh38.primary_assembly.genome.fa.gz) using the bowtie2-build command in the rule bowtie2_build_gencode. The resulting index files were stored in the results/ directory with the prefix genome.
+
+
+
+If asked, you may also include any plots or figures in this notebook as well:
 
