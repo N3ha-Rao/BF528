@@ -1,5 +1,7 @@
 # Project 2: ChIP-Seq Analysis
 
+ChIP-seq analysis pipeline encompassing data processing, quality control, alignment, peak calling, annotation and motif analysis.
+
 ## Understanding the gene regulatory mechanisms by RUNX1
 Understanding the gene regulatory mechanisms orchestrated by transcription factors is paramount for deciphering complex biological processes, including cancer development and progression. In this analysis, we delve into the role of RUNX1, a pivotal transcription factor implicated in various cellular functions, particularly in breast cancer biology. This study builds upon the comprehensive research conducted by Barutcu et al. (2016), where they employed a multi-omics approach, including RNA-seq, ChIP-seq, and Hi-C analyses, to elucidate the regulatory landscape governed by RUNX1 in breast cancer. While their study provided invaluable insights into the molecular mechanisms underlying breast cancer pathogenesis, we narrow our focus to the ChIP-seq aspect, aiming to unravel the genome-wide binding sites of RUNX1 within the MCF7 genome.
 
